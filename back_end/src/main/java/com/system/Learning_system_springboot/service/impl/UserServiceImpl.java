@@ -1,5 +1,4 @@
 package com.system.Learning_system_springboot.service.impl;
-
 import com.system.Learning_system_springboot.model.dto.UserDTO;
 import com.system.Learning_system_springboot.model.entity.Role;
 import com.system.Learning_system_springboot.model.entity.Status;
@@ -10,33 +9,23 @@ import com.system.Learning_system_springboot.model.exception.UserNotFoundExcepti
 import com.system.Learning_system_springboot.model.repo.UserRepository;
 import com.system.Learning_system_springboot.service.UserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
-
 @Service
 public class UserServiceImpl implements UserService {
-
     private final ModelMapper modelMapper;
-
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
     public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository,ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
-
     @Override
     public UserDTO saveUser(UserDTO dto) throws InvalidFieldsException {
         User creatortest = userRepository.findById(1).orElseThrow(() -> new UserNotFoundException("Creator Not Found"));
@@ -62,7 +51,6 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);
     }
-
     @Override
     public String generateUserCode(Role role) {
         String prefix = switch (role) {
@@ -74,30 +62,31 @@ public class UserServiceImpl implements UserService {
         Long count = userRepository.countByRole(role);
         return prefix + String.format("%04d", count + 1);
     }
-
     @Override
     public UserDTO getByCode(String code) {
         User user = userRepository.findByUserCode(code)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found"));
         return modelMapper.map(user, UserDTO.class);
     }
-
     @Override
     public UserDTO getById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not Found"));
         return modelMapper.map(user, UserDTO.class);
     }
-
     @Override
     public Page<UserDTO> getAllUser(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return users.map(user -> modelMapper.map(user, UserDTO.class));
     }
-
     @Override
-    public Page<UserDTO> getStudent(Pageable pageable) {
-        Page<User> students = userRepository.findByRole(pageable,Role.STUDENT);
+    public Page<UserDTO> getStudents(Pageable pageable) {
+        Page<User> teachers = userRepository.findByRole(pageable,Role.STUDENT);
+        return teachers.map(teacher -> modelMapper.map(teacher,UserDTO.class));
+    }
+    @Override
+    public Page<UserDTO> getTeachers(Pageable pageable) {
+        Page<User> students = userRepository.findByRole(pageable,Role.TEACHER);
         return students.map(student -> modelMapper.map(student,UserDTO.class));
     }
     @Override
@@ -152,6 +141,4 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.save(existingUser);
         return modelMapper.map(updatedUser, UserDTO.class);
     }
-
-
 }

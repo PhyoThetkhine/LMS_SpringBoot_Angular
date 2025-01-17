@@ -4,7 +4,7 @@ import { StudentManagementComponent } from './components/adminview/student-manag
 const routes: Routes = [
   { path: 'admin/student-list', component: StudentManagementComponent },
   // Add other routes here
-  { path: '', redirectTo: '/admin/student-list', pathMatch: 'full' } // Default route
+  { path: '', redirectTo: '', pathMatch: 'full' } // Default route
 ];
 
 @NgModule({

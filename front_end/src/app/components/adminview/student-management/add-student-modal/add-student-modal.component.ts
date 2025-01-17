@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output , ChangeDetectorRef} from '@angular/core';
 import { UserDTO } from '../../../../models/user.model';
 import { UserService } from '../../../../services/user.service';
 
@@ -23,14 +23,22 @@ export class AddStudentModalComponent {
     createAdmin: null 
   };
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,private cdr: ChangeDetectorRef) { }
 
   openModal(): void {
     this.showModal = true;
+    this.resetForm();
+    this.cdr.detectChanges();
   }
 
   closeModal(): void {
     this.showModal = false;
+    this.resetForm(); // Clear form fields when modal is closed
+    const modalElement = document.querySelector('.modal') as HTMLElement;
+    if (modalElement) {
+      modalElement.classList.remove('show');
+      modalElement.style.display = 'none';
+    }
   }
 
   addStudent(): void {
@@ -38,10 +46,22 @@ export class AddStudentModalComponent {
       (response) => {
         this.studentAdded.emit(); // Notify parent component
         this.closeModal();
+      this.resetForm();
       },
       (error) => {
         console.error('Failed to add student', error);
       }
     );
+  }
+  resetForm(): void {
+    this.newStudent = {
+      name: '',
+      email: '',
+      password: null,
+      userCode: null,
+      status: null,
+      role: 'STUDENT',
+      createAdmin: null,
+    };
   }
 }

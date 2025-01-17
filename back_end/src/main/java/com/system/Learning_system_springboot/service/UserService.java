@@ -18,5 +18,6 @@ public interface UserService {
     List<UserDTO> findTeachersNotAssignedToCourse(Integer courseId);
     void changePassword(String userCode, String currentPassword, String newPassword);
     UserDTO updateByUser(UserDTO dto);
-    Page<UserDTO> getStudent(Pageable pageable);
+    Page<UserDTO> getStudents(Pageable pageable);
+    Page<UserDTO> getTeachers(Pageable pageable);
 }

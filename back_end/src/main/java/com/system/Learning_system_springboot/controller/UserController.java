@@ -1,3 +1,9 @@
+
+    /**
+     * Constructs a new UserController with the specified UserService.
+     *
+     * @param userService the UserService to be used by this controller
+     */
 package com.system.Learning_system_springboot.controller;
 import com.system.Learning_system_springboot.model.dto.UserDTO;
 import com.system.Learning_system_springboot.model.dto.ApiResponse;
@@ -57,12 +63,9 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
-
         sortBy = sortBy.trim();
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<UserDTO> users = userService.getStudent(pageable);
-
-        // Flatten the pagination data and include it directly in the response
+        Page<UserDTO> users = userService.getStudents(pageable);
         ApiResponse<Map<String, Object>> response = new ApiResponse<>();
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("content", users.getContent());
@@ -74,14 +77,35 @@ public class UserController {
         responseData.put("first", users.isFirst());
         responseData.put("last", users.isLast());
         responseData.put("empty", users.isEmpty());
-
         response.setStatus(HttpStatus.OK.value());
-        response.setMessage("Users List");
+        response.setMessage("Students    List");
         response.setData(responseData);
-
         return ResponseEntity.ok(response);
     }
-
+    @GetMapping("teachers") //GET http://localhost:8080/api/user/users?page=0&size=20&sortBy=id
+    public ResponseEntity<?> getTeacherPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        sortBy = sortBy.trim();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<UserDTO> users = userService.getTeachers(pageable);
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>();
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("content", users.getContent());
+        responseData.put("totalPages", users.getTotalPages());
+        responseData.put("totalElements", users.getTotalElements());
+        responseData.put("size", users.getSize());
+        responseData.put("number", users.getNumber());
+        responseData.put("numberOfElements", users.getNumberOfElements());
+        responseData.put("first", users.isFirst());
+        responseData.put("last", users.isLast());
+        responseData.put("empty", users.isEmpty());
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("Teachers List");
+        response.setData(responseData);
+        return ResponseEntity.ok(response);
+    }
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         UserDTO updatedUser = userService.updateByUser(user);
@@ -98,6 +122,12 @@ public class UserController {
     public ResponseEntity<?> activateUser(@PathVariable Integer id) {
         userService.activeUserById(id);
         ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK.value(), "User activated successfully", null);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/terminate/{id}")
+    public ResponseEntity<?> terminateUser(@PathVariable Integer id) {
+        userService.terminateUserById(id);
+        ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK.value(), "User terminate successfully", null);
         return ResponseEntity.ok(response);
     }
 

@@ -42,6 +42,15 @@ export class UserService {
       }
     });
   }  
+  getTeacherPagination(page: number, size: number, sortBy: string): Observable<ApiResponse<Page<UserDTO>>> {
+    return this.http.get<ApiResponse<Page<UserDTO>>>(`${this.apiUrl}/teachers`, {
+      params: {
+        page: page.toString(),
+        size: size.toString(),
+        sortBy
+      }
+    });
+  }  
   updateUser(user: UserDTO): Observable<ApiResponse<UserDTO>> {
     return this.http.put<ApiResponse<UserDTO>>(`${this.apiUrl}/update`, user);
   }
@@ -53,6 +62,11 @@ export class UserService {
   activateUser(id: number): Observable<ApiResponse<void>> {
     return this.http.post<ApiResponse<void>>(`${this.apiUrl}/activate/${id}`, {});
   }
+  
+  terminateUser(id: number): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/terminate/${id}`, {});
+  }
+  
 
   getStudentsNotEnrolled(courseId: number): Observable<ApiResponse<UserDTO[]>> {
     return this.http.get<ApiResponse<UserDTO[]>>(`${this.apiUrl}/students-not-enroll`, {
@@ -61,6 +75,7 @@ export class UserService {
       }
     });
   }
+
 
   getTeachersNotAssigned(courseId: number): Observable<ApiResponse<UserDTO[]>> {
     return this.http.get<ApiResponse<UserDTO[]>>(`${this.apiUrl}/teachers-not-assigned`, {
