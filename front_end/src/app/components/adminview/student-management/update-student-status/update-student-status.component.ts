@@ -7,21 +7,19 @@ import { UserService } from '../../../../services/user.service';
   standalone: false,
   
   templateUrl: './update-student-status.component.html',
-  styleUrls: ['./update-student-status.component.css'] // Fix the path to the styles
+  styleUrls: ['./update-student-status.component.css'] 
 })
 export class UpdateStudentStatusComponent {
   @Input() student!: UserDTO;
   @Output() statusUpdated = new EventEmitter<void>();
-
   constructor(private userService: UserService) { }
-
   updateStatus(newStatus: string): void {
     if (this.student.id !== undefined) {
       if (newStatus === 'ACTIVE') {
         this.userService.activateUser(this.student.id).subscribe(
           (response) => {
             console.log('User activated successfully:', response);
-            this.statusUpdated.emit(); // Notify parent component
+            this.statusUpdated.emit(); 
           },
           (error) => {
             console.error('Failed to activate user', error);
@@ -31,7 +29,7 @@ export class UpdateStudentStatusComponent {
         this.userService.terminateUser(this.student.id).subscribe(
           (response) => {
             console.log('User terminated successfully:', response);
-            this.statusUpdated.emit(); // Notify parent component
+            this.statusUpdated.emit(); 
           },
           (error) => {
             console.error('Failed to terminate user', error);

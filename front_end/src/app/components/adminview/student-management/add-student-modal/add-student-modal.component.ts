@@ -2,6 +2,7 @@
 import { Component, EventEmitter, Output , ChangeDetectorRef} from '@angular/core';
 import { UserDTO } from '../../../../models/user.model';
 import { UserService } from '../../../../services/user.service';
+import { ApiResponse } from '../../../../models/api-response.model';
 
 @Component({
   selector: 'app-add-student-modal',
@@ -12,6 +13,8 @@ import { UserService } from '../../../../services/user.service';
 })
 export class AddStudentModalComponent {
   @Output() studentAdded = new EventEmitter<void>();
+  @Output() studentError = new EventEmitter<string>();
+  @Output() studentSuccess = new EventEmitter<string>();
   showModal: boolean = false;
   newStudent: UserDTO = { 
     name: '', 
@@ -33,7 +36,7 @@ export class AddStudentModalComponent {
 
   closeModal(): void {
     this.showModal = false;
-    this.resetForm(); // Clear form fields when modal is closed
+    this.resetForm(); 
     const modalElement = document.querySelector('.modal') as HTMLElement;
     if (modalElement) {
       modalElement.classList.remove('show');
@@ -43,13 +46,27 @@ export class AddStudentModalComponent {
 
   addStudent(): void {
     this.userService.createUser(this.newStudent).subscribe(
-      (response) => {
-        this.studentAdded.emit(); // Notify parent component
-        this.closeModal();
-      this.resetForm();
+      (response: ApiResponse<UserDTO>) => {
+        if (response.status === 200) {
+          this.studentAdded.emit();
+          this.studentSuccess.emit(response.message);
+          this.closeModal();
+          this.resetForm();
+        } else {
+          this.studentError.emit(response.message);
+          this.closeModal();
+        this.resetForm();
+        }
       },
       (error) => {
         console.error('Failed to add student', error);
+        if (error.error && error.error.message) {
+          this.studentError.emit(error.error.message);
+        } else {
+          this.studentError.emit('An unexpected error occurred.');
+        }
+        this.closeModal();
+        this.resetForm();
       }
     );
   }

@@ -7,10 +7,7 @@
 package com.system.Learning_system_springboot.controller;
 import com.system.Learning_system_springboot.model.dto.UserDTO;
 import com.system.Learning_system_springboot.model.dto.ApiResponse;
-import com.system.Learning_system_springboot.model.entity.User;
-import com.system.Learning_system_springboot.model.repo.UserRepository;
 import com.system.Learning_system_springboot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,19 +23,10 @@ import java.util.Map;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-    @Autowired
-    private UserRepository userRepository;
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @PostMapping("/save")
-    public ResponseEntity<?> createUser(@RequestBody UserDTO user) {
-        UserDTO savedUser = userService.saveUser(user);
 
-        ApiResponse<UserDTO> response = ApiResponse.success(HttpStatus.OK.value(), "User created successfully", savedUser);
-        return ResponseEntity.ok(response);
-    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Integer id) {
         UserDTO user = userService.getById(id);
@@ -80,6 +67,12 @@ public class UserController {
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("Students    List");
         response.setData(responseData);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/save")
+    public ResponseEntity<?> createUser(@RequestBody UserDTO user) {
+        UserDTO savedUser = userService.saveUser(user);
+        ApiResponse<UserDTO> response = ApiResponse.success(HttpStatus.OK.value(), "User created successfully", savedUser);
         return ResponseEntity.ok(response);
     }
     @GetMapping("teachers") //GET http://localhost:8080/api/user/users?page=0&size=20&sortBy=id

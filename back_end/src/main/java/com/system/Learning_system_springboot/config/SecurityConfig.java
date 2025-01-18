@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/topic/**").permitAll() // Allow access to topics
                         .requestMatchers("/api/user/users**").permitAll() // Allow access to user endpoints
                         .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/api/user/save").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

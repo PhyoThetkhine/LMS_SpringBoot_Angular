@@ -26,31 +26,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
-    @Override
-    public UserDTO saveUser(UserDTO dto) throws InvalidFieldsException {
-        User creatortest = userRepository.findById(1).orElseThrow(() -> new UserNotFoundException("Creator Not Found"));
-        dto.setCreateAdmin(creatortest);
-        User activeDuplicate = userRepository.findByEmailAndStatus(dto.getEmail(), Status.ACTIVE);
-        if (activeDuplicate != null && !Objects.equals(dto.getId(), activeDuplicate.getId())) {
-            throw new InvalidFieldsException("A user with this email already exists as a " + activeDuplicate.getRole().getDisplayName());
-        } else {
-            User terminatedDuplicate = userRepository.findByEmailAndStatus(dto.getEmail(), Status.TERMINATE);
-            if (terminatedDuplicate != null && !Objects.equals(dto.getId(), terminatedDuplicate.getId())) {
-                throw new InvalidFieldsException("A user with this email already exists and Terminated as a " + terminatedDuplicate.getRole().getDisplayName());
-            }
-        }
-        User creator = userRepository.findById(dto.getCreateAdmin().getId()).orElseThrow(() -> new UserNotFoundException("Creator Not Found"));
-        if (!creator.getRole().equals(Role.ADMIN) && !creator.getRole().equals(Role.DEPARTMENT_HEAD)) {
-            throw new ServiceException("Permission denied!");
-        }
-        dto.setCreateAdmin(creator);
-        dto.setPassword(passwordEncoder.encode("yan_kee"));
-        dto.setUserCode(generateUserCode(dto.getRole()));
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
-        User user = modelMapper.map(dto, User.class);
-        User savedUser = userRepository.save(user);
-        return modelMapper.map(savedUser, UserDTO.class);
-    }
+
     @Override
     public String generateUserCode(Role role) {
         String prefix = switch (role) {
@@ -83,6 +59,31 @@ public class UserServiceImpl implements UserService {
     public Page<UserDTO> getStudents(Pageable pageable) {
         Page<User> teachers = userRepository.findByRole(pageable,Role.STUDENT);
         return teachers.map(teacher -> modelMapper.map(teacher,UserDTO.class));
+    }
+    @Override
+    public UserDTO saveUser(UserDTO dto) throws InvalidFieldsException {
+        User creatortest = userRepository.findById(1).orElseThrow(() -> new UserNotFoundException("Creator Not Found"));
+        dto.setCreateAdmin(creatortest);
+        User activeDuplicate = userRepository.findByEmailAndStatus(dto.getEmail(), Status.ACTIVE);
+        if (activeDuplicate != null && !Objects.equals(dto.getId(), activeDuplicate.getId())) {
+            throw new InvalidFieldsException("A user with this email already exists as a " + activeDuplicate.getRole().getDisplayName());
+        } else {
+            User terminatedDuplicate = userRepository.findByEmailAndStatus(dto.getEmail(), Status.TERMINATE);
+            if (terminatedDuplicate != null && !Objects.equals(dto.getId(), terminatedDuplicate.getId())) {
+                throw new InvalidFieldsException("A user with this email already exists and Terminated as a " + terminatedDuplicate.getRole().getDisplayName());
+            }
+        }
+        User creator = userRepository.findById(dto.getCreateAdmin().getId()).orElseThrow(() -> new UserNotFoundException("Creator Not Found"));
+        if (!creator.getRole().equals(Role.ADMIN) && !creator.getRole().equals(Role.DEPARTMENT_HEAD)) {
+            throw new ServiceException("Permission denied!");
+        }
+        dto.setCreateAdmin(creator);
+        dto.setPassword(passwordEncoder.encode("yan_kee"));
+        dto.setUserCode(generateUserCode(dto.getRole()));
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        User user = modelMapper.map(dto, User.class);
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserDTO.class);
     }
     @Override
     public Page<UserDTO> getTeachers(Pageable pageable) {

@@ -13,9 +13,7 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  createUser(user: UserDTO): Observable<ApiResponse<UserDTO>> {
-    return this.http.post<ApiResponse<UserDTO>>(`${this.apiUrl}/save`, user);
-  }
+ 
 
   getUserById(id: number): Observable<ApiResponse<UserDTO>> {
     return this.http.get<ApiResponse<UserDTO>>(`${this.apiUrl}/${id}`);
@@ -42,6 +40,9 @@ export class UserService {
       }
     });
   }  
+  createUser(user: UserDTO): Observable<ApiResponse<UserDTO>> {
+    return this.http.post<ApiResponse<UserDTO>>(`${this.apiUrl}/save`, user);
+  }
   getTeacherPagination(page: number, size: number, sortBy: string): Observable<ApiResponse<Page<UserDTO>>> {
     return this.http.get<ApiResponse<Page<UserDTO>>>(`${this.apiUrl}/teachers`, {
       params: {

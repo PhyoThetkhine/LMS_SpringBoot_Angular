@@ -10,6 +10,8 @@ import { AddStudentModalComponent } from './components/adminview/student-managem
 import { UpdateStudentStatusComponent } from './components/adminview/student-management/update-student-status/update-student-status.component';
 import { ErrorAlertComponent } from './components/adminview/student-management/error-alert/error-alert.component';
 import { FormsModule } from '@angular/forms';
+import { SuccessAlertComponent } from './components/adminview/student-management/success-alert/success-alert.component';
+
 
 
 @NgModule({
@@ -21,6 +23,7 @@ import { FormsModule } from '@angular/forms';
     AddStudentModalComponent,
     UpdateStudentStatusComponent,
     ErrorAlertComponent,
+    SuccessAlertComponent,
 
   ],
   imports: [

@@ -1,7 +1,8 @@
 <table class="table table-striped">
     <thead>
       <tr>
-        <th>No.</th> <!-- Index column -->
+        <th>#</th>
+        <th>Code</th> 
         <th>Name</th>
         <th>Email</th>
         <th>Created By</th>
@@ -10,15 +11,18 @@
     </thead>
     <tbody>
       <tr *ngFor="let student of students; let i = index">
-        <td>{{ i + 1 }}</td> <!-- Displaying the row index -->
+        <td>{{ i + 1 }}</td>
+        <td>{{student.userCode}}</td>
         <td>{{ student.name }}</td>
         <td>{{ student.email }}</td>
         <td>{{ student.createAdmin?.userCode }}</td>
         <td>
+
           <app-update-student-status 
             [student]="student" 
             (statusUpdated)="statusUpdated.emit()">
           </app-update-student-status>
+          
         </td>
       </tr>
     </tbody>
