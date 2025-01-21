@@ -1,0 +1,27 @@
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Created By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let teacher of teachers; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ teacher.userCode }}</td>
+        <td>{{ teacher.name }}</td>
+        <td>{{ teacher.email }}</td>
+        <td>{{ teacher.createAdmin?.userCode }}</td>
+        <td>
+            <app-update-teacher-status 
+            [teacher]="teacher" 
+            (statusUpdated)="statusUpdated.emit()">
+          </app-update-teacher-status> <!-- Add status update component here -->
+        </td>
+      </tr>
+    </tbody>
+  </table>

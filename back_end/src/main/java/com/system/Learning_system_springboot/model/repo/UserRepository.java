@@ -3,9 +3,11 @@ package com.system.Learning_system_springboot.model.repo;
 import com.system.Learning_system_springboot.model.entity.Role;
 import com.system.Learning_system_springboot.model.entity.Status;
 import com.system.Learning_system_springboot.model.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByEmailAndStatus(String email,Status status);
     Optional<User> findByUserCode(String code);
     Page<User> findByRole(Pageable pageable,Role role);
+    List<User> findByRole(Role role);
 
     @Query("SELECT u FROM User u " +
             "WHERE u.role = 'STUDENT' " +
@@ -37,4 +40,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "   SELECT cht.user.id FROM UserCourseEnroll cht WHERE cht.course.id = :courseId" +
             ")")
     List<User> findTeachersNotAssignedToCourse(@Param("courseId") Integer courseId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.status = :status, u.updateDate = CURRENT_DATE WHERE u.id = :id")
+    void updateStatus(@Param("id") Integer id, @Param("status") Status status);
 }

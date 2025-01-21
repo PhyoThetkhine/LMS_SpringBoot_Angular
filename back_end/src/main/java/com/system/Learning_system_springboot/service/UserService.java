@@ -20,4 +20,5 @@ public interface UserService {
     UserDTO updateByUser(UserDTO dto);
     Page<UserDTO> getStudents(Pageable pageable);
     Page<UserDTO> getTeachers(Pageable pageable);
+    List<UserDTO> getStudents();
 }

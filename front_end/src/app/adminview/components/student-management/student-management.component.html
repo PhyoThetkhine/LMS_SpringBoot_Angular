@@ -1,0 +1,38 @@
+<div class="main-content">
+  <div class="header">
+    <h1>Student Management</h1>
+  </div>
+  <app-error-alert [error]="error"></app-error-alert>
+  <app-success-alert [success]="success"></app-success-alert>
+
+  <button class="btn btn-primary mb-3" (click)="addStudentModal.openModal()"> <i class="bi bi-person-plus-fill"></i>  Add New Student</button>
+
+  <app-student-list 
+[students]="students" 
+(statusUpdated)="onStatusUpdated()">
+</app-student-list>
+
+  <div class="pagination">
+      <button 
+        class="btn btn-secondary" 
+        [disabled]="currentPage === 0" 
+        (click)="goToPage(currentPage - 1)">
+        Previous
+      </button>
+      <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button 
+        class="btn btn-secondary" 
+        [disabled]="currentPage + 1 === totalPages" 
+        (click)="goToPage(currentPage + 1)">
+        Next
+      </button>
+    </div>
+
+  <app-add-student-modal 
+  #addStudentModal 
+  (studentAdded)="loadStudents()" 
+  (studentError)="handleError($event)" 
+  (studentSuccess)="handleSuccess($event)">
+</app-add-student-modal>
+
+</div>

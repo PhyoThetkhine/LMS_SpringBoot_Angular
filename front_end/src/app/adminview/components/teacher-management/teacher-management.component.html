@@ -1,0 +1,21 @@
+<div class="main-content">
+    <div class="header">
+      <h1>Teacher Management</h1>
+    </div>
+    <app-error-alert [error]="error"></app-error-alert>
+    <app-success-alert [success]="success"></app-success-alert>
+  
+    <button class="btn btn-primary mb-3" (click)="addTeacherModal.openModal()">
+      <i class="bi bi-person-plus-fill"></i> Add New Teacher
+    </button>
+  
+    <app-teacher-list [teachers]="teachers" (statusUpdated)="onStatusUpdated()"></app-teacher-list>
+  
+    <div class="pagination">
+      <button class="btn btn-secondary" [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button class="btn btn-secondary" [disabled]="currentPage + 1 === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
+  
+    <app-add-teacher-modal #addTeacherModal (teacherAdded)="loadTeachers()" (teacherError)="handleError($event)" (teacherSuccess)="handleSuccess($event)"></app-add-teacher-modal>
+  </div>

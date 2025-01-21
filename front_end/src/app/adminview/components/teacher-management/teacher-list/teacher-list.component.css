@@ -1,0 +1,44 @@
+/* General Table Styles */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+  }
+  .table th,
+  .table td {
+    padding: 0.75rem;
+    vertical-align: middle; /* Ensures vertical alignment in the middle */
+    text-align: left; /* Aligns text to the left */
+    border: 1px solid #dee2e6; /* Adds border to all cells */
+  }
+  .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    font-weight: bold; /* Makes header text bold */
+  }
+  .table tbody tr {
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  .table tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9; /* Light grey for odd rows */
+  }
+  .table tbody tr:nth-of-type(even) {
+    background-color: #ffffff; /* White for even rows */
+  }
+  .table tbody tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+  }
+  .table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+  }
+  /* Optional Styling for Small Screens */
+  @media (max-width: 768px) {
+    .table th,
+    .table td {
+      font-size: 14px; /* Smaller font size for smaller screens */
+      padding: 0.5rem; /* Adjust padding for smaller screens */
+    }
+  }
+  

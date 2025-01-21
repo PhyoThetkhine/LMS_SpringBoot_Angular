@@ -123,7 +123,6 @@ public class UserController {
         ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK.value(), "User terminate successfully", null);
         return ResponseEntity.ok(response);
     }
-
     @GetMapping("/students-not-enroll")
     public ResponseEntity<?> getStudentsNotEnrolledInCourse(@RequestParam Integer courseId) {
         List<UserDTO> students = userService.findStudentsNotEnrolledInCourse(courseId);
@@ -135,5 +134,10 @@ public class UserController {
         List<UserDTO> teachers = userService.findTeachersNotAssignedToCourse(courseId);
         ApiResponse<List<UserDTO>> response = ApiResponse.success(HttpStatus.OK.value(), "Teachers Not Assigned", teachers);
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/allstudents")
+    public ResponseEntity<List<UserDTO>> getAllStudent(){
+        List<UserDTO> students = userService.getStudents();
+        return ResponseEntity.ok(students);
     }
 }

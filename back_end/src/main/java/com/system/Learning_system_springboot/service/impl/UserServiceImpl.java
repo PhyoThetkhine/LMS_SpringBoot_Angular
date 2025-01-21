@@ -90,20 +90,27 @@ public class UserServiceImpl implements UserService {
         Page<User> students = userRepository.findByRole(pageable,Role.TEACHER);
         return students.map(student -> modelMapper.map(student,UserDTO.class));
     }
+    //ForTest
+    @Override
+    public List<UserDTO> getStudents() {
+        List<User> students = userRepository.findByRole(Role.STUDENT);
+        return students.stream()
+                .map(student -> modelMapper.map(student, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void terminateUserById(Integer id) {
         User deleteUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found"));
-        deleteUser.setStatus(Status.TERMINATE);
-        userRepository.save(deleteUser);
+        userRepository.updateStatus(id,Status.TERMINATE);
     }
 
     @Override
     public void activeUserById(Integer id) {
         User activeUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found"));
-        activeUser.setStatus(Status.ACTIVE);
-        userRepository.save(activeUser);
+        userRepository.updateStatus(id,Status.ACTIVE);
     }
 
     @Override

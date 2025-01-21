@@ -1,0 +1,2 @@
+<button *ngIf="teacher.status === 'ACTIVE'" class="btn btn-danger" (click)="updateStatus('TERMINATE')"><i class="bi bi-person-fill-dash"></i> Terminate</button>
+<button *ngIf="teacher.status === 'TERMINATE'" class="btn btn-success" (click)="updateStatus('ACTIVE')"><i class="bi bi-person-fill-up"></i> Reactivate</button>
